@@ -1,0 +1,10 @@
+{
+  "sdfsdf": {
+    "active": true,
+    "expires": "2025-05-06T14:54:00Z"
+  },
+  "anotherone": {
+    "active": false,
+    "expires": "2024-12-01T00:00:00Z"
+  }
+}
