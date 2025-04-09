@@ -33,6 +33,5 @@ export default defineConfig({
   build: {
     outDir: path.resolve(__dirname, "dist/public"),
     emptyOutDir: true,
-  },
-  base : process.env.VITE_BASE_PATH || "/DataSubmissionPortal"
+  }
 });
