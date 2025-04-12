@@ -34,7 +34,7 @@ const useClientValidation = () => {
                 console.log(data)
                 const client = data[subdomain];
                 if (client?.active) {
-
+                    console.log(client);
                     const [datePart, timePart] = client.expires.split(" ");
                     const [day, month, year] = datePart.split("/").map(Number);
                     const [hour, minute] = timePart.split(":").map(Number);
