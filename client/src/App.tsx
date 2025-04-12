@@ -34,12 +34,17 @@ const useClientValidation = () => {
                 console.log(data)
                 const client = data[subdomain];
                 if (client?.active) {
+
+                    const [datePart, timePart] = client.expires.split(" ");
+                    const [day, month, year] = datePart.split("/").map(Number);
+                    const [hour, minute] = timePart.split(":").map(Number);
+                    const expirationDate = new Date(year, month - 1, day, hour, minute);
                     const now = new Date();
-                    const expiry = new Date(client.expires);
-                    if (now < expiry) {
-                        setStatus({valid: true, loading: false});
-                    } else {
+
+                    if (expirationDate < now) {
                         setStatus({valid: false, loading: false});
+                    } else {
+                        setStatus({valid: true, loading: false});
                     }
                 } else {
                     setStatus({valid: false, loading: false});
