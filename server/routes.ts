@@ -162,6 +162,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
     });
 
+    app.post("/api/deleteLink/:linkId", (req: Request, res: Response) => {
+        const linkId = req.params.linkId;
+        if (!linkId) {
+            return respondFailed(res, RESPONSE_MESSAGES.MISSING_PARAMETERS);
+        }
+
+        try {
+            const rawData = fs.readFileSync(LINK_DATA_FILE_PATH, 'utf-8');
+            const data = JSON.parse(rawData);
+
+            delete data.linkId;
+
+            fs.writeFileSync(LINK_DATA_FILE_PATH, JSON.stringify(data, null, 2));
+
+            respondSuccess(res);
+        } catch (error) {
+            console.error(`Error fetching data:`, error);
+            res.status(500).json({success: false, error: "Failed to get data"});
+        }
+    });
+
     // Route to save user data
     app.post("/api/save-data", (req: Request, res: Response) => {
         try {
