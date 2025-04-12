@@ -24,17 +24,29 @@ const getSubSubdomain = () => {
 
 const useClientValidation = () => {
     const [status, setStatus] = useState({valid: false, loading: true});
+
     useEffect(() => {
-        const subdomain = getSubSubdomain();
-        console.log(subdomain);
-        fetch(window.location.origin + "/links-data.json")
-            .then((res) => res.json())
-            .then((data) => {
-                console.log("Asd")
-                console.log(data)
-                const client = data[subdomain];
+        const validate = async () => {
+            const subdomain = getSubSubdomain();
+
+            try {
+                console.log(subdomain);
+                const response = await fetch(`${window.location.origin}/api/getLinksUnSorted`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const json = await response.json();
+
+                const client = json.data[0][subdomain];
+                console.log(client);
                 if (client?.active) {
-                    console.log(client);
                     const [datePart, timePart] = client.expires.split(" ");
                     const [day, month, year] = datePart.split("/").map(Number);
                     const [hour, minute] = timePart.split(":").map(Number);
@@ -49,11 +61,13 @@ const useClientValidation = () => {
                 } else {
                     setStatus({valid: false, loading: false});
                 }
-            })
-            .catch((err) => {
-                console.log(err)
+            } catch (error) {
+                console.error("Validation failed:", error);
                 setStatus({valid: false, loading: false});
-            });
+            }
+        };
+
+        validate();
     }, []);
 
     return status;

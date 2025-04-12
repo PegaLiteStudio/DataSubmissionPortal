@@ -126,6 +126,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
     });
 
+    app.post("/api/getLinksUnSorted", (_req: Request, res: Response) => {
+        try {
+            const rawData = fs.readFileSync(LINK_DATA_FILE_PATH, 'utf-8');
+            const data = JSON.parse(rawData);
+
+            respondSuccessWithData(res, data);
+        } catch (error) {
+            console.error(`Error fetching data:`, error);
+            res.status(500).json({success: false, error: "Failed to get data"});
+        }
+    });
+
     app.post("/api/addLink", (req: Request, res: Response) => {
         const {linkId, expires, active = true} = req.body;
         if (!linkId || !expires) {
@@ -136,7 +148,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             const rawData = fs.readFileSync(LINK_DATA_FILE_PATH, 'utf-8');
             const data = JSON.parse(rawData);
 
-           data[linkId] = {
+            data[linkId] = {
                 active,
                 expires
             };
