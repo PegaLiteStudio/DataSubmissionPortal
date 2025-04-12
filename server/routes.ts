@@ -171,7 +171,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             const rawData = fs.readFileSync(LINK_DATA_FILE_PATH, 'utf-8');
             const data = JSON.parse(rawData);
 
-            delete data.linkId;
+            delete data[linkId];
 
             fs.writeFileSync(LINK_DATA_FILE_PATH, JSON.stringify(data, null, 2));
 
